@@ -11,8 +11,6 @@ from ultralytics.utils.plotting import colors
 #cap=original video
 #results=bounding boxes of detected humans
 #track_history= trajectory data
-#
-
 
 
 
@@ -22,7 +20,7 @@ model = YOLO("yolov5s.pt")
 names = model.model.names
 
 
-video_path = r"C:\Users\91827\Desktop\Capstone\sample_cctv_2.mp4"
+video_path = r"C:\Users\91827\Desktop\Capstone\sample_cctv.mkv"
 #C:\Users\91827\Desktop\Capstone\sample_cctv.mp4
 
 # Open the video file
@@ -31,7 +29,6 @@ assert cap.isOpened(), "Error reading video file"
 
 # Get video properties
 w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
-
 
 result = cv2.VideoWriter("object_tracking.avi",
                        cv2.VideoWriter_fourcc(*'mp4v'),
