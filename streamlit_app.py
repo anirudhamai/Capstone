@@ -1,29 +1,29 @@
-# Define the homepage after successful login
-def homepage(token):
-    st.empty()
-    st.title("Home Security System - Homepage")
+import streamlit as st
 
-    # Add navigation
-    menu = ["Upload Homeowner Data", "Watch Videos", "Open Image"]
-    choice = st.sidebar.selectbox("Menu", menu)
+# Define session_state variables
+if 'page' not in st.session_state:
+    st.session_state['page'] = 'login'
 
-    if choice == "Upload Homeowner Data":
-        upload_photos(token)
-    elif choice == "Watch Videos":
-        watch_videos()
-    elif choice == "Open Image":
-        open_image()
+# Define the login page
+def login_page():
+    st.title('Login Page')
+    st.write('This is the login page')
+    if st.button('Go to Sign Up Page'):
+        st.session_state['page'] = 'signup'
 
-# Modify the main function to pass the token to the homepage
+# Define the sign-up page
+def signup_page():
+    st.title('Sign Up Page')
+    st.write('This is the sign-up page')
+    if st.button('Go to Login Page'):
+        st.session_state['page'] = 'login'
+
+# Main function to switch between pages
 def main():
-    st.title("Home Security System")
-    if 'loggedIn' not in st.session_state:
-        st.session_state['loggedIn'] = False
-        login() 
-    else:
-        if st.session_state['loggedIn']:
-            show_logout_page()    
-            token = get_token()  # Retrieve the token from somewhere
-            homepage(token)  # Pass the token to the homepage function
-        else:
-            login()
+    if st.session_state['page'] == 'login':
+        login_page()
+    elif st.session_state['page'] == 'signup':
+        signup_page()
+
+if __name__ == "__main__":
+    main()
