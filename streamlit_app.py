@@ -1,26 +1,41 @@
-# frontend.py
-
 import streamlit as st
-from streamlit.state.session_state import SessionState
 
-# Define a function to handle the navigation to the new page
-def open_new_page():
-    st.write("This is the new page!")
+def login():
+    st.title('Login')
+    username = st.text_input('Username')
+    password = st.text_input('Password', type='password')
 
-# Define the main function to run the web application
+    if st.button('Login'):
+        # Here you would add authentication logic
+        if username == 'user' and password == 'password':
+            st.success('Login successful!')
+            st.session_state['authenticated'] = True
+        else:
+            st.error('Invalid username or password')
+
+def signup():
+    st.title('Sign Up')
+    st.write('Sign up functionality goes here.')
+
+def home():
+    st.title('Home')
+    st.write('Welcome to the home page. Choose an option from below:')
+    if st.button('Upload Home Owner\'s Data'):
+        st.write('Functionality to upload home owner\'s data goes here.')
+    if st.button('Watch Videos'):
+        st.write('Functionality to watch videos goes here.')
+    if st.button('Open an Image'):
+        st.write('Functionality to open an image goes here.')
+
 def main():
-    st.title("Navigation Example")
+    if 'authenticated' not in st.session_state:
+        st.session_state['authenticated'] = False
 
-    # Check if the button to open the new page has been clicked
-    session_state = SessionState.get(button_clicked=False)
+    if not st.session_state['authenticated']:
+        login()
+        st.write('[Sign Up](signup)')
+    else:
+        home()
 
-    # Button to trigger the navigation to the new page
-    if st.button("Open New Page"):
-        session_state.button_clicked = True
-
-    # Check if the button has been clicked
-    if session_state.button_clicked:
-        open_new_page()
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
