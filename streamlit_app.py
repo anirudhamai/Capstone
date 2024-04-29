@@ -1,41 +1,29 @@
-import streamlit as st
+# Define the homepage after successful login
+def homepage(token):
+    st.empty()
+    st.title("Home Security System - Homepage")
 
-def login():
-    st.title('Login')
-    username = st.text_input('Username')
-    password = st.text_input('Password', type='password')
+    # Add navigation
+    menu = ["Upload Homeowner Data", "Watch Videos", "Open Image"]
+    choice = st.sidebar.selectbox("Menu", menu)
 
-    if st.button('Login'):
-        # Here you would add authentication logic
-        if username == 'user' and password == 'password':
-            st.success('Login successful!')
-            st.session_state['authenticated'] = True
-        else:
-            st.error('Invalid username or password')
+    if choice == "Upload Homeowner Data":
+        upload_photos(token)
+    elif choice == "Watch Videos":
+        watch_videos()
+    elif choice == "Open Image":
+        open_image()
 
-def signup():
-    st.title('Sign Up')
-    st.write('Sign up functionality goes here.')
-
-def home():
-    st.title('Home')
-    st.write('Welcome to the home page. Choose an option from below:')
-    if st.button('Upload Home Owner\'s Data'):
-        st.write('Functionality to upload home owner\'s data goes here.')
-    if st.button('Watch Videos'):
-        st.write('Functionality to watch videos goes here.')
-    if st.button('Open an Image'):
-        st.write('Functionality to open an image goes here.')
-
+# Modify the main function to pass the token to the homepage
 def main():
-    if 'authenticated' not in st.session_state:
-        st.session_state['authenticated'] = False
-
-    if not st.session_state['authenticated']:
-        login()
-        st.write('[Sign Up](signup)')
+    st.title("Home Security System")
+    if 'loggedIn' not in st.session_state:
+        st.session_state['loggedIn'] = False
+        login() 
     else:
-        home()
-
-if __name__ == '__main__':
-    main()
+        if st.session_state['loggedIn']:
+            show_logout_page()    
+            token = get_token()  # Retrieve the token from somewhere
+            homepage(token)  # Pass the token to the homepage function
+        else:
+            login()
