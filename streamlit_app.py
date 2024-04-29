@@ -1,22 +1,26 @@
+# frontend.py
+
 import streamlit as st
+from streamlit.state.session_state import SessionState
 
-def page1():
-    st.title('Page 1')
-    st.write('Click the link below to navigate to Page 2:')
-    if st.sidebar.write('[Go to Page 2](page2)'):
-        pass
+# Define a function to handle the navigation to the new page
+def open_new_page():
+    st.write("This is the new page!")
 
-def page2():
-    st.title('Page 2')
-    st.write('Welcome to Page 2')
-
+# Define the main function to run the web application
 def main():
-    page = st.session_state.get('page', 'page1')
+    st.title("Navigation Example")
 
-    if page == 'page1':
-        page1()
-    elif page == 'page2':
-        page2()
+    # Check if the button to open the new page has been clicked
+    session_state = SessionState.get(button_clicked=False)
 
-if __name__ == '__main__':
+    # Button to trigger the navigation to the new page
+    if st.button("Open New Page"):
+        session_state.button_clicked = True
+
+    # Check if the button has been clicked
+    if session_state.button_clicked:
+        open_new_page()
+
+if __name__ == "__main__":
     main()
