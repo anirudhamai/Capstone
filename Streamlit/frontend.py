@@ -6,7 +6,6 @@ from flask import redirect
 import webbrowser
 
 
-
 headerSection = st.container()
 mainSection = st.container()
 loginSection = st.container()
@@ -74,21 +73,20 @@ def homepage(token):
         st.title("Home Security System - Homepage")
 
          # Add navigation
-        menu = ["Upload Homeowner Data", "Watch Videos", "Open Image","Log Out"]
+        menu = ["Upload Homeowner Data", "Watch Videos", "CCTV Feed Control","Log Out"]
         choice = st.sidebar.selectbox("Menu", menu)
-
         if choice == "Upload Homeowner Data":
             upload_photos(token)
         elif choice == "Watch Videos":
             watch_videos()
-        elif choice == "Open Image":
+        elif choice == "CCTV Feed Control":
             open_image()
         elif choice == "Log Out":
             show_logout_page()
 
 # Define a function to upload homeowner photos
 def upload_photos(token):
-    st.subheader("Upload Homeowner Photos")
+    st.subheader("Upload Homeowner's Photos")
     homeowner_name = st.text_input("Homeowner Name")
     uploaded_file = st.file_uploader("Upload Photo", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
@@ -100,14 +98,22 @@ def upload_photos(token):
         else:
             st.error("Failed to upload photo. Please try again.")
 
+
 # Define function to watch videos
 def watch_videos():
     st.subheader("Watch Videos")
-    # Add functionality to watch videos here
+    video_path = r"C:\Users\91827\Desktop\Capstone\object_tracking_2.avi"
+    st.video(video_path)
 
 # Define function to open image
 def open_image():
-    st.subheader("Open Image")
+    # st.subheader("Open Image")
+    st.subheader("Enable transfer of cctv footage")
+    option = st.radio("Click yes to enable transfer of cctv footage", ("No", "Yes"))
+    if option == "Yes":
+        response = requests.get(f'{BASE_URL}/upload_video')
+        if response.status_code == 201:
+            st.success("Video sending successfully!")
     # Add functionality to open image here
 
 def show_logout_page():

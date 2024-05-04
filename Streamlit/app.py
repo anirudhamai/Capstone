@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_migrate import Migrate
-import jwt  # Add jwt library for token generation
+import socket
+import jwt
+import time  # Add jwt library for token generation
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -14,6 +16,9 @@ app.config['SECRET_KEY'] = '7de5106d15bc506be7b57649309e7c38'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+SERVER_HOST = 'localhost' 
+SERVER_PORT = 8502
 
 # Define User model
 class User(db.Model):
@@ -78,10 +83,29 @@ def upload_photo():
     # Add logic for file validation and saving
     filename = f"{homeowner_name}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}.jpg"
     # Save file logic here
+    # file.save('/images'+filename)
     new_photo = HomeownerPhoto(homeowner_name=homeowner_name, image_path=filename)
     db.session.add(new_photo)
     db.session.commit()
     return jsonify({'message': 'Photo uploaded successfully'}), 201
+
+# route to upload video footage to server
+@app.route('/upload_video', methods=['Get'])
+def upload_video():
+    video_filename = r"C:\Users\91827\Desktop\Capstone\sample_cctv.mp4"
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((SERVER_HOST, SERVER_PORT))
+    with open(video_filename, 'rb') as f:   
+        while True:
+            video_chunk = f.read(1024)
+            if not video_chunk:
+                break
+            client_socket.sendall(len(video_chunk).to_bytes(4, byteorder='big'))
+            client_socket.sendall(video_chunk)
+    print("[*] Video sent successfully.")
+    client_socket.close()
+    # time.sleep(10)
+    return jsonify({'message': 'Video sent successfully'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
